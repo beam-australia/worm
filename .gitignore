@@ -1,0 +1,15 @@
+/vendor
+composer.lock
+.DS_Store
+Thumbs.db
+/phpunit.xml
+/coveralls.json
+/clover.xml
+/.idea
+/.vscode
+.phpunit.result.cache
+*.bak
+*.hhbc
+*.pid
+*.log
+/wordpress/

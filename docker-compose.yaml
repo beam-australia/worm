@@ -1,0 +1,15 @@
+version: "3.7"
+services:
+
+  service-database:
+    image: mysql:5.7
+    environment:
+      - MYSQL_ROOT_PASSWORD=123_SLEEPY_LIL_RABBITS
+      - MYSQL_DATABASE=wordpress_tests
+
+  wordpress:
+    image: beamaustralia/php:7.3.6
+    volumes:
+        - './:/var/www'
+    depends_on:
+      - service-database
