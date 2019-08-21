@@ -4,6 +4,7 @@ namespace Beam\Worm\Factories;
 
 use Faker\Factory;
 use Faker\Generator;
+use Beam\Worm\Model;
 use Beam\Worm\Collection;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -25,6 +26,13 @@ class Builder
     public $factories;
 
     /**
+     * Defined factory states
+     *
+     * @var Collection
+     */
+    public $states;
+
+    /**
      * Faker generator instance
      *
      * @var Generator
@@ -38,6 +46,8 @@ class Builder
     {
         $this->factories = new Collection;
 
+        $this->states = new Collection;
+
         $this->faker = Factory::create();
     }
 
@@ -49,7 +59,7 @@ class Builder
     public static function getInstance(): Builder
     {
         if (static::$instance === null) {
-           static::$instance = new static;
+            static::$instance = new static;
         }
 
         return static::$instance;
@@ -91,23 +101,33 @@ class Builder
     }
 
     /**
-     * Define a new factory
+     * Define a new factory state
      *
      * @param string $model
+     * @param $name
+     * @param callable $callback
      * @return void
      */
-    public function defineTaxonomy(string $model)
+    public function state(string $model, string $name, callable $callback)
     {
-        $this->factories->put($model, $model);
+        $original = $this->states->get($model);
+
+        if (empty($original)) {
+            $original = [];
+        }
+
+        $merged = array_merge($original, [$name => $callback]);
+
+        $this->states->put($model, $merged);
     }
 
     /**
-     * Call a factory callable
+     * Call a factory
      *
      * @param string $model
      * @return array
      */
-    public function call(string $model):? array
+    public function applyFactory(string $model): ?array
     {
         $factory = $this->factories->get($model);
 
@@ -118,6 +138,33 @@ class Builder
         }
 
         return null;
+    }
+
+    /**
+     * Call a factories states
+     *
+     * @param string $model
+     * @param string $name
+     * @param Model $instance
+     * @return Model
+     */
+    public function applyFactoryState(string $model, string $name, Model $instance): ?Model
+    {
+        $states = $this->states->get($model);
+
+        if (empty($states) || false === isset($states[$name])) {
+            return $instance;
+        }
+
+        $state = $states[$name];
+
+        $this->faker->seed(rand());
+
+        if (is_callable($state)) {
+            $instance = call_user_func_array($state, [$instance, $this->faker]);
+        }
+
+        return $instance;
     }
 
     /**

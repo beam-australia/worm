@@ -32,6 +32,13 @@ class Factory
     public $builder;
 
     /**
+     * Factory states to apply
+     *
+     * @var Collection
+     */
+    public $states;
+
+    /**
      * Object constructor.
      *
      * @param Builder $builder
@@ -45,6 +52,25 @@ class Factory
         $this->model = $model;
 
         $this->numberOf = $numberOf;
+
+        $this->states = new Collection;
+    }
+
+    /**
+     * Sets the states to be applied
+     *
+     * @param [type] $states
+     * @return Factory
+     */
+    public function states($states): Factory
+    {
+        if (is_string($states)) {
+            $this->states->push($states);
+        } else {
+            $this->states = new Collection($states);
+        }
+
+        return $this;
     }
 
     /**
@@ -64,6 +90,12 @@ class Factory
                 $mergedAttrs = $this->attributes($attributes);
 
                 $instance = $this->model::create($mergedAttrs);
+
+                if ($this->states->isNotEmpty()) {
+                    foreach ($this->states as $state) {
+                        $instance = $this->builder->applyFactoryState($this->model, $state, $instance);
+                    }
+                }
             } else {
                 $instance = $this->createTerm($this->model::TAXONOMY);
             }
@@ -90,7 +122,7 @@ class Factory
             throw new Exception("No factory defined for " . $this->model);
         }
 
-        $factoryAttrs = $this->builder->call($this->model);
+        $factoryAttrs = $this->builder->applyFactory($this->model);
 
         return array_merge($factoryAttrs, $attributes);
     }

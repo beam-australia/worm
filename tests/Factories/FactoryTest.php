@@ -80,4 +80,51 @@ class FactoryTest extends \Tests\TestCase
             "name",
         ]));
     }
+
+    public function test_it_can_create_factory_states()
+    {
+        $family = factory(Fixtures\Family::class)->create();
+
+        $this->assertEmpty($family->mother);
+        $this->assertEmpty($family->father);
+        $this->assertEmpty($family->children);
+
+        $family = factory(Fixtures\Family::class)
+            ->states(['with-children','with-parents'])
+            ->create();
+
+        $this->assertEquals($family->children->count(), 5);
+
+        $family->children->each(function ($child) {
+            $this->assertInstanceOf(Fixtures\Person::class, $child);
+        });
+
+        $this->assertInstanceOf(Fixtures\Person::class, $family->mother);
+
+        $this->assertInstanceOf(Fixtures\Person::class, $family->father);
+    }
+
+
+    public function test_it_can_create_single_factory_state()
+    {
+        $family = factory(Fixtures\Family::class)->create();
+
+        $this->assertEmpty($family->mother);
+        $this->assertEmpty($family->father);
+        $this->assertEmpty($family->children);
+
+        $family = factory(Fixtures\Family::class)
+            ->states('with-children')
+            ->create();
+
+        $this->assertEquals($family->children->count(), 5);
+
+        $family->children->each(function ($child) {
+            $this->assertInstanceOf(Fixtures\Person::class, $child);
+        });
+
+        $this->assertEmpty($family->mother);
+
+        $this->assertEmpty($family->father);
+    }
 }

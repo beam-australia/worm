@@ -57,7 +57,7 @@ class BuilderTest extends \Tests\TestCase
 
         $builder->define(Fixtures\Person::class, $callback);
 
-        $result = $builder->call(Fixtures\Person::class);
+        $result = $builder->applyFactory(Fixtures\Person::class);
 
         $this->assertEquals($result, ['foo-bar']);
     }
@@ -71,16 +71,5 @@ class BuilderTest extends \Tests\TestCase
         $this->assertTrue($builder->has(Fixtures\Person::class));
 
         $this->assertFalse($builder->has(stdClass::class));
-    }
-
-    public function test_it_can_define_taxonomy_factories()
-    {
-        $builder = new Builder;
-
-        $builder->defineTaxonomy(Fixtures\Breeds::class);
-
-        $taxonomy = $builder->get(Fixtures\Breeds::class);
-
-        $this->assertEquals($taxonomy::TAXONOMY, Fixtures\Breeds::TAXONOMY);
     }
 }
