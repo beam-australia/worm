@@ -56,6 +56,20 @@ trait AssertsPosts
             $actualId = $actual;
         }
 
-        $this->assertEquals($expectedId, $actualId, "Posts not the same.");
+        $actualPost = get_post($actualId);
+
+        $expectedPost = get_post($expectedId);
+
+        $this->assertEquals(
+            $expectedId,
+            $actualId,
+            "Post ID not the same."
+        );
+
+        $this->assertEquals(
+            $actualPost->post_type,
+            $expectedPost->post_type,
+            "Post Type not the same."
+        );
     }
 }
