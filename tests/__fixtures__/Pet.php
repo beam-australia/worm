@@ -2,9 +2,10 @@
 
 namespace Tests\Fixtures;
 
-use Beam\Worm\Post;
-use Beam\Worm\Collection;
+use Tests\Fixtures\Taxonomies;
 use Beam\Worm\Enums\PostStatus;
+use Beam\Worm\Collection;
+use Beam\Worm\Post;
 
 class Pet extends Post
 {
@@ -34,7 +35,9 @@ class Pet extends Post
     public function getTaxonomies(): Collection
     {
         return $this->taxonomies([
-            Breeds::TAXONOMY
+            Taxonomies\Breeds::TAXONOMY,
+            Taxonomies\Species::TAXONOMY,
+            Taxonomies\Environments::TAXONOMY
         ]);
     }
 }
