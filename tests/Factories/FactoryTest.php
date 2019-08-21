@@ -6,6 +6,7 @@ use WP_Post;
 use WP_Term;
 use Beam\Worm\Collection;
 use Illuminate\Support\Arr;
+use Tests\Fixtures\Taxonomies;
 use Tests\Fixtures;
 
 class FactoryTest extends \Tests\TestCase
@@ -34,16 +35,16 @@ class FactoryTest extends \Tests\TestCase
 
     public function test_it_can_create_a_single_term()
     {
-        $term = factory(Fixtures\Breeds::class)->create();
+        $term = factory(Taxonomies\Breeds::class)->create();
 
         $this->assertInstanceOf(WP_Term::class, $term);
 
-        $this->assertEquals(Fixtures\Breeds::TAXONOMY, $term->taxonomy);
+        $this->assertEquals(Taxonomies\Breeds::TAXONOMY, $term->taxonomy);
     }
 
     public function test_it_can_create_a_term_collection()
     {
-        $collection = factory(Fixtures\Breeds::class, 3)->create();
+        $collection = factory(Taxonomies\Breeds::class, 3)->create();
 
         $this->assertInstanceOf(Collection::class, $collection);
 

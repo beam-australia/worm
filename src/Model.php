@@ -190,6 +190,36 @@ class Model implements Arrayable
     }
 
     /**
+     * Mass save taxonomy terms
+     *
+     * @param array $values
+     * @return void
+     */
+    public function saveTaxonomies(array $values): void
+    {
+        foreach ($values as $taxonomy => $terms) {
+            if ($this->getTaxonomies()->has($taxonomy)) {
+                $this->getTaxonomies()->get($taxonomy)->save($terms);
+            }
+        }
+    }
+
+    /**
+     * Mass sync taxonomy terms
+     *
+     * @param iterable $values
+     * @return void
+     */
+    public function syncTaxonomies(iterable $values): void
+    {
+        foreach ($values as $taxonomy => $terms) {
+            if ($this->getTaxonomies()->has($taxonomy)) {
+                $this->getTaxonomies()->get($taxonomy)->sync($terms);
+            }
+        }
+    }
+
+    /**
      * Load values on the model
      *
      * @return void

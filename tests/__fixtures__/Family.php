@@ -2,9 +2,10 @@
 
 namespace Tests\Fixtures;
 
+use Tests\Fixtures\Taxonomies;
+use Beam\Worm\Enums\PostStatus;
 use Beam\Worm\Collection;
 use Beam\Worm\Post;
-use Beam\Worm\Enums\PostStatus;
 
 class Family extends Post
 {
@@ -44,7 +45,7 @@ class Family extends Post
     public function getTaxonomies(): Collection
     {
         return $this->taxonomies([
-            Countries::TAXONOMY
+            Taxonomies\Countries::TAXONOMY
         ]);
     }
 }

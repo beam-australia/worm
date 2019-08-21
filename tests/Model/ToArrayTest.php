@@ -1,9 +1,10 @@
 <?php
 
-namespace Tests\Worm\Model\Post;
+namespace Tests\Worm\Model;
 
 use WP_Term;
 use Tests\Fixtures;
+use Tests\Fixtures\Taxonomies;
 
 class ToArrayTest extends \Tests\TestCase
 {
@@ -22,7 +23,7 @@ class ToArrayTest extends \Tests\TestCase
     {
         $family = factory(Fixtures\Family::class)->create();
 
-        $countries = factory(Fixtures\Countries::class, 10)->create();
+        $countries = factory(Taxonomies\Countries::class, 10)->create();
 
         $family->countries()->save($countries);
 

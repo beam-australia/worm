@@ -3,6 +3,7 @@
 namespace Tests\Worm\Model\Relations;
 
 use Tests\Fixtures;
+use Tests\Fixtures\Taxonomies;
 
 class HasTermsTest extends \Tests\TestCase
 {
@@ -10,7 +11,7 @@ class HasTermsTest extends \Tests\TestCase
     {
         $pet = factory(Fixtures\Pet::class)->create();
 
-        $breeds = factory(Fixtures\Breeds::class, 4)->create();
+        $breeds = factory(Taxonomies\Breeds::class, 4)->create();
 
         $this->assertTrue($pet->breeds->isEmpty());
 
@@ -27,7 +28,7 @@ class HasTermsTest extends \Tests\TestCase
 
         for ($i = 1; $i < 15; $i++) {
 
-            $breed = factory(Fixtures\Breeds::class)->create();
+            $breed = factory(Taxonomies\Breeds::class)->create();
 
             $pet->breeds()->save($breed);
 
@@ -39,7 +40,7 @@ class HasTermsTest extends \Tests\TestCase
     {
         $pet = factory(Fixtures\Pet::class)->create();
 
-        $breeds = factory(Fixtures\Breeds::class, 4)->create();
+        $breeds = factory(Taxonomies\Breeds::class, 4)->create();
 
         $this->assertEmpty($pet->breeds);
 
@@ -47,7 +48,7 @@ class HasTermsTest extends \Tests\TestCase
 
         $this->assertSameTerms($pet->breeds, $breeds);
 
-        $newBreeds = factory(Fixtures\Breeds::class, 8)->create();
+        $newBreeds = factory(Taxonomies\Breeds::class, 8)->create();
 
         $pet->breeds()->sync($newBreeds);
 
@@ -58,7 +59,7 @@ class HasTermsTest extends \Tests\TestCase
     {
         $pet = factory(Fixtures\Pet::class)->create();
 
-        $breeds = factory(Fixtures\Breeds::class, 4)->create();
+        $breeds = factory(Taxonomies\Breeds::class, 4)->create();
 
         $pet->breeds()->save($breeds);
 
@@ -71,7 +72,7 @@ class HasTermsTest extends \Tests\TestCase
     {
         $pet = factory(Fixtures\Pet::class)->create();
 
-        $breeds = factory(Fixtures\Breeds::class, 4)->create();
+        $breeds = factory(Taxonomies\Breeds::class, 4)->create();
 
         $pet->breeds()->save($breeds);
 
