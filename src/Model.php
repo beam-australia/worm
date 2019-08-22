@@ -220,6 +220,36 @@ class Model implements Arrayable
     }
 
     /**
+     * Mass save relations
+     *
+     * @param array $values
+     * @return void
+     */
+    public function saveRelations(array $values): void
+    {
+        foreach ($values as $relation => $models) {
+            if ($this->getRelations()->has($relation)) {
+                $this->getRelations()->get($relation)->save($models);
+            }
+        }
+    }
+
+    /**
+     * Mass sync relations terms
+     *
+     * @param iterable $values
+     * @return void
+     */
+    public function syncRelations(iterable $values): void
+    {
+        foreach ($values as $relation => $models) {
+            if ($this->getRelations()->has($relation)) {
+                $this->getRelations()->get($relation)->sync($models);
+            }
+        }
+    }
+
+    /**
      * Load values on the model
      *
      * @return void

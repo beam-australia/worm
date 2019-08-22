@@ -4,8 +4,9 @@ namespace Beam\Worm\Relations;
 
 use Beam\Worm\Collection;
 use Beam\Worm\Model;
+use Beam\Worm\Contracts\Relation;
 
-class HasOne
+class HasOne implements Relation
 {
     /**
      * Calling model instance
@@ -116,5 +117,17 @@ class HasOne
         } else {
             $this->instance->update($this->column, $values);
         }
+    }
+
+    /**
+     * Syncs related models
+     *
+     * @param iterable|int $values
+     * @return void
+     */
+    public function sync($values): void
+    {
+        // Pesuedo sync as one-to-one is always a sync.
+        $this->save($values);
     }
 }

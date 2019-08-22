@@ -7,8 +7,9 @@ use Beam\Worm\Model;
 use Beam\Worm\Post;
 use Beam\Worm\User;
 use Beam\Worm\Database;
+use Beam\Worm\Contracts\Relation;
 
-class HasMany
+class HasMany implements Relation
 {
     /**
      * Calling model instance

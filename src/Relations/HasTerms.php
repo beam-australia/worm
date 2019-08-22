@@ -4,8 +4,9 @@ namespace Beam\Worm\Relations;
 
 use Beam\Worm\Collection;
 use Beam\Worm\Model;
+use Beam\Worm\Contracts\Relation;
 
-class HasTerms
+class HasTerms implements Relation
 {
     /**
      * Calling model instance
