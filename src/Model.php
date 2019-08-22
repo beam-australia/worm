@@ -227,6 +227,12 @@ class Model implements Arrayable
      */
     public function saveRelations(array $values): void
     {
+        foreach ($values as $key => $value) {
+            if (Str::endsWith($key, '_id')) {
+                $values[Str::before($key, '_id')] = $value;
+            }
+        }
+
         foreach ($values as $relation => $models) {
             if ($this->getRelations()->has($relation)) {
                 $this->getRelations()->get($relation)->save($models);
@@ -242,6 +248,12 @@ class Model implements Arrayable
      */
     public function syncRelations(iterable $values): void
     {
+        foreach ($values as $key => $value) {
+            if (Str::endsWith($key, '_id')) {
+                $values[Str::before($key, '_id')] = $value;
+            }
+        }
+
         foreach ($values as $relation => $models) {
             if ($this->getRelations()->has($relation)) {
                 $this->getRelations()->get($relation)->sync($models);

@@ -31,4 +31,17 @@ class HasOneTest extends \Tests\TestCase
 
         $this->assertSamePost($pet->family, $family);
     }
+
+    public function test_it_can_access_relation_id_as_property()
+    {
+        $pet = factory(Fixtures\Pet::class)->create();
+
+        $family = factory(Fixtures\Family::class)->create();
+
+        $this->assertNull($pet->family_id);
+
+        $pet->family()->save($family);
+
+        $this->assertSamePost($pet->family_id, $family->ID);
+    }
 }
