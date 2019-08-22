@@ -72,4 +72,22 @@ class SaveRelationsTest extends \Tests\TestCase
         $this->assertEquals($family->children->count(), 6);
         $this->assertEquals($family->pets->count(), 4);
     }
+
+    public function test_it_can_save_HasOne_using_id()
+    {
+        $family = factory(Fixtures\Family::class)->create();
+
+        $this->assertEmpty($family->mother);
+        $this->assertEmpty($family->father);
+
+        $models = [
+            'mother_id' => factory(Fixtures\Person::class)->create()->ID,
+            'father_id' => factory(Fixtures\Person::class)->create()->ID,
+        ];
+
+        $family->saveRelations($models);
+
+        $this->assertSamePost($family->mother->ID, $models['mother_id']);
+        $this->assertSamePost($family->father->ID, $models['father_id']);
+    }
 }

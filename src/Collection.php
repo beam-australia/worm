@@ -2,6 +2,7 @@
 
 namespace Beam\Worm;
 
+use Beam\Worm\Relations\HasOne;
 use Tightenco\Collect\Support\Collection as BaseCollection;
 use Tightenco\Collect\Contracts\Support\Arrayable;
 
