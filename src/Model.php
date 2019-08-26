@@ -300,7 +300,7 @@ class Model implements Arrayable
                     $data[$key] = Types::cast($instance->$key, $instance->cast[$key]);
                 }
             } else {
-                $data[$key] = $instance->$key;
+                $data[$key] = html_entity_decode($instance->$key);
             }
         }
 
