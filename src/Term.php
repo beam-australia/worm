@@ -90,6 +90,7 @@ class Term
 
         $fake = (object) [
             'term_id' => 0,
+            'parent' => $parent->term_id,
             'slug' => 'all-'.$parent->slug,
             'group' => $children->isNotEmpty() ? $children->first()->group : '',
             'name' => 'All '.$parent->name,
