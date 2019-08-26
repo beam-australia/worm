@@ -8,6 +8,7 @@ use Beam\Worm\Post;
 use Beam\Worm\User;
 use Beam\Worm\Database;
 use Beam\Worm\Contracts\Relation;
+use Illuminate\Support\Arr;
 
 class HasMany implements Relation
 {
@@ -124,6 +125,8 @@ class HasMany implements Relation
     {
         if ($values instanceof Collection) {
             $values = $values->pluck('ID')->toArray();
+        } else if (is_array($values) && Arr::has($values, 'ID')) {
+            $values = Arr::pluck($values, 'ID');
         } else if ($values instanceof Model) {
             $values = $values->ID;
         }

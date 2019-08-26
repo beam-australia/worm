@@ -82,6 +82,10 @@ class HasTerms implements Relation
             $values = [$values];
         }
 
+        if (is_array($values)) {
+            $values = new Collection($values);
+        }
+
         if ($values instanceof Collection) {
             if ($values->has('term_id')) {
                 $values = $values->pluck('term_id')->toArray();

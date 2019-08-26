@@ -5,6 +5,7 @@ namespace Beam\Worm\Relations;
 use Beam\Worm\Collection;
 use Beam\Worm\Model;
 use Beam\Worm\Contracts\Relation;
+use Illuminate\Support\Arr;
 
 class HasOne implements Relation
 {
@@ -114,6 +115,10 @@ class HasOne implements Relation
             $this->instance->update($this->column, $values->pluck('ID')->toArray());
         } else if ($values instanceof Model) {
             $this->instance->update($this->column, $values->ID);
+        } else if (is_array($values)) {
+            if (Arr::has($values, 'ID')) {
+                $this->instance->update($this->column, $values['ID']);
+            }
         } else {
             $this->instance->update($this->column, $values);
         }
