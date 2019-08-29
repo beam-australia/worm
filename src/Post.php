@@ -52,7 +52,7 @@ class Post extends Model
     {
         $postId = wp_insert_post(array_merge(static::$defaults, $attributes), true);
 
-        if ($postId instanceof WP_Error) {
+        if (is_wp_error($postId)) {
             throw new \Exception($postId->get_error_message());
         }
 

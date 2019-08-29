@@ -60,7 +60,7 @@ class User extends Model
             'show_admin_bar_front' => 'false',
         ]);
 
-        if ($userId instanceof WP_Error) {
+        if (is_wp_error($userId)) {
             throw new \Exception($userId->get_error_message());
         }
 
