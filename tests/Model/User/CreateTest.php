@@ -52,4 +52,21 @@ class UserMetaTest extends \Tests\TestCase
 
         $this->assertEquals($user->status, UserStatus::APPROVED);
     }
+
+    public function test_throws_exception_on_create_error()
+    {
+        $this->expectException(\Exception::class);
+
+        factory(User::class)->create([
+            'user_email' => 'exists@beamaustralia.com.au',
+            'first_name' => 'Isaac',
+            'last_name' => 'Newton',
+        ]);
+
+        User::create([
+            'user_email' => 'exists@beamaustralia.com.au',
+            'first_name' => 'Isaac',
+            'last_name' => 'Newton',
+        ]);
+    }
 }

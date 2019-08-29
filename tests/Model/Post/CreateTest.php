@@ -52,4 +52,13 @@ class CreateTest extends \Tests\TestCase
 
         $this->assertEquals($post->post_status, PostStatus::PENDING);
     }
+
+    public function test_throws_exception_on_create_error()
+    {
+        $this->expectException(\Exception::class);
+
+        Post::create([
+            // Nothing throws exception !
+        ]);
+    }
 }
