@@ -88,14 +88,17 @@ class Term
 
         $children = is_array($children) ? new Collection($children) : new Collection;
 
-        $fake = (object) [
-            'term_id' => 0,
-            'parent' => $parent->term_id,
-            'slug' => 'all-'.$parent->slug,
-            'name' => 'All '.$parent->name,
-        ];
+        if ($parent->parent === 0) {
 
-        $children->prepend($fake);
+            $fake = (object) [
+                'term_id' => 0,
+                'parent' => $parent->term_id,
+                'slug' => 'all-'.$parent->slug,
+                'name' => 'All '.$parent->name,
+            ];
+
+            $children->prepend($fake);
+        }
 
         return $children;
     }
