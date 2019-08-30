@@ -52,13 +52,12 @@ class User extends Model
      */
     public static function create(array $attributes): User
     {
-        $userId = wp_insert_user([
-            'user_pass' => $attributes['user_pass'] ?? '',
+        $userId = wp_insert_user(array_merge($attributes, [
             'user_login' => $attributes['user_email'],
             'user_email' => $attributes['user_email'],
             'role' => static::ROLE,
             'show_admin_bar_front' => 'false',
-        ]);
+        ]));
 
         if (is_wp_error($userId)) {
             throw new \Exception($userId->get_error_message());
