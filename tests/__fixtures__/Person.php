@@ -11,12 +11,14 @@ class Person extends User
     const ROLE = 'person';
 
     public $attributes = [
+        'user_registered',
         'first_name',
         'family_id',
         'user_email',
     ];
 
     public $fillable = [
+        'user_registered',
         'first_name',
         'user_email',
     ];

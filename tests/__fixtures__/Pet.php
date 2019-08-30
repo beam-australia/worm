@@ -12,11 +12,13 @@ class Pet extends Post
     const TYPE = 'pet';
 
     public $attributes = [
+        'post_date',
         'name',
         'post_type',
     ];
 
     public $fillable = [
+        'post_date',
         'name',
     ];
 

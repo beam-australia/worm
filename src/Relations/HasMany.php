@@ -77,13 +77,19 @@ class HasMany implements Relation
                 WHERE
                     wp_postmeta.meta_value = ".$this->instance->ID."
                     AND wp_posts.post_type = '".$this->model::TYPE."'
+                ORDER BY
+                    DATE(wp_posts.post_date) DESC
             ";
         } else if (is_subclass_of($this->model, User::class)) {
             $query = "
                 SELECT wp_users.ID
                 FROM wp_users
-                LEFT JOIN wp_usermeta ON wp_usermeta.user_id = wp_users.ID AND wp_usermeta.meta_key = '".$this->column."'
-                WHERE wp_usermeta.meta_value = ".$this->instance->ID."
+                LEFT JOIN
+                    wp_usermeta ON wp_usermeta.user_id = wp_users.ID AND wp_usermeta.meta_key = '".$this->column."'
+                WHERE
+                    wp_usermeta.meta_value = ".$this->instance->ID."
+                ORDER BY
+                    DATE(wp_users.user_registered) DESC
             ";
         }
 
