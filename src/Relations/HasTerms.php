@@ -94,11 +94,20 @@ class HasTerms implements Relation
             }
         }
 
-        foreach ($values as $id) {
-            if (is_object($id)) { // stdClass || WP_Term
-                $slugs[] = $id->slug;
-            } else if ($term = get_term((int) $id, $this->taxonomy)) {
+        foreach ($values as $value) {
+            if (is_numeric($value)) {
+                $term = get_term((int) $value, $this->taxonomy);
                 $slugs[] = $term->slug;
+            } else {
+                $value = (object) $value;
+                $slugs[] = $value->slug;
+            }
+        }
+
+        // remove non-existing terms
+        foreach ($slugs as $key => $slug) {
+            if (term_exists($slug, $this->taxonomy) === null) {
+                unset($slugs[$key]);
             }
         }
 

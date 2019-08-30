@@ -6,7 +6,7 @@ use Mockery;
 use Beam\Worm\Testing\Assertions\AssertsPosts;
 use Beam\Worm\Testing\Assertions\AssertsTerms;
 
-class TestCase extends \WP_UnitTestCase
+abstract class TestCase extends \WP_UnitTestCase
 {
     use AssertsPosts, AssertsTerms;
 

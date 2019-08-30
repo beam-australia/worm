@@ -82,4 +82,24 @@ class HasTermsTest extends \Tests\TestCase
 
         $this->assertEquals($pet->breeds()->getIds()->count(), 4);
     }
+
+    public function test_it_does_not_create_terms_when_they_dont_exist()
+    {
+        $pet = factory(Fixtures\Pet::class)->create();
+
+        $breeds = factory(Taxonomies\Breeds::class, 4)->create();
+
+        $breeds->push([
+            'slug' => 'should-not-exist',
+            'name' => 'fake term',
+        ]);
+
+        $pet->breeds()->save($breeds);
+
+        $slugs = $pet->breeds->pluck('slug');
+
+        $this->assertFalse($slugs->contains('should-not-exist'));
+
+        $this->assertEquals($slugs->count(), 4);
+    }
 }
