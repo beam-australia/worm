@@ -2,6 +2,7 @@
 
 namespace Beam\Worm\Relations;
 
+use Beam\Worm\Ids;
 use Beam\Worm\Collection;
 use Beam\Worm\Model;
 use Beam\Worm\Contracts\Relation;
@@ -111,17 +112,9 @@ class HasOne implements Relation
      */
     public function save($values): void
     {
-        if ($values instanceof Collection) {
-            $this->instance->update($this->column, $values->pluck('ID')->toArray());
-        } else if ($values instanceof Model) {
-            $this->instance->update($this->column, $values->ID);
-        } else if (is_array($values)) {
-            if (Arr::has($values, 'ID')) {
-                $this->instance->update($this->column, $values['ID']);
-            }
-        } else {
-            $this->instance->update($this->column, $values);
-        }
+        $id = Ids::getId($values);
+
+        $this->instance->update($this->column, $id);
     }
 
     /**

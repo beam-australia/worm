@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Worm\Model\Post;
+namespace Tests\Worm\Model;
 
 use Tests\Fixtures;
 
