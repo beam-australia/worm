@@ -90,6 +90,7 @@ class HasTermsTest extends \Tests\TestCase
         $breeds = factory(Taxonomies\Breeds::class, 4)->create();
 
         $breeds->push([
+            'term_id' => 0,
             'slug' => 'should-not-exist',
             'name' => 'fake term',
         ]);
