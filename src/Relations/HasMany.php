@@ -2,6 +2,7 @@
 
 namespace Beam\Worm\Relations;
 
+use Beam\Worm\Ids;
 use Beam\Worm\Collection;
 use Beam\Worm\Model;
 use Beam\Worm\Post;
@@ -129,17 +130,9 @@ class HasMany implements Relation
      */
     public function save($values): void
     {
-        if ($values instanceof Collection) {
-            $values = $values->pluck('ID')->toArray();
-        } else if (is_array($values) && Arr::has($values, 'ID')) {
-            $values = Arr::pluck($values, 'ID');
-        } else if ($values instanceof Model) {
-            $values = $values->ID;
-        }
+        $ids = Ids::getIds($values);
 
-        $values = is_array($values) ? $values : [$values];
-
-        foreach ($values as $id) {
+        foreach ($ids as $id) {
             $modelClass = $this->model;
             $relatedInstance = new $modelClass($id);
             $relatedInstance->update($this->column, $this->instance->ID);
