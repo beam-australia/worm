@@ -97,6 +97,9 @@ class HasTerms implements Relation
         foreach ($values as $value) {
             if (is_numeric($value)) {
                 $term = get_term((int) $value, $this->taxonomy);
+                if (is_wp_error($term)) {
+                    throw new \Exception($term->get_error_message());
+                }
                 $slugs[] = $term->slug;
             } else {
                 $value = (object) $value;
