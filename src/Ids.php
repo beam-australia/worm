@@ -2,6 +2,7 @@
 
 namespace Beam\Worm;
 
+use WP_Term;
 use Beam\Worm\Model;
 
 class Ids
@@ -36,6 +37,45 @@ class Ids
         }
 
         return []; // None resolved.
+    }
+
+    /**
+     * Return an array of term slugs
+     *
+     * @param mixed $values
+     * @param string $taxonomy
+     * @return array
+     */
+    public static function getSlugs($values, string $taxonomy): array
+    {
+        if ($values instanceof WP_Term) {
+            return [$values->slug];
+        }
+
+        $slugs = [];
+
+        if (is_iterable($values)) {
+
+            $collection = new Collection($values);
+
+            if ($collection->has('term_id') || isset($collection->first()['term_id'])) {
+                $ids = $collection->pluck('term_id');
+            } else if (is_numeric($collection->first())) {
+                $ids = $collection->toArray();
+            }
+
+            if (count($ids)) {
+                foreach ($ids as $id) {
+                    $id = (int) $id;
+                    if (term_exists($id, $taxonomy)) {
+                        $term = get_term($id, $taxonomy);
+                        $slugs[] = $term->slug;
+                    }
+                }
+            }
+        }
+
+        return $slugs;
     }
 
     /**

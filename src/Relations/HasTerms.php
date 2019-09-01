@@ -2,6 +2,7 @@
 
 namespace Beam\Worm\Relations;
 
+use Beam\Worm\Ids;
 use Beam\Worm\Collection;
 use Beam\Worm\Model;
 use Beam\Worm\Contracts\Relation;
@@ -76,42 +77,7 @@ class HasTerms implements Relation
      */
     public function save($values): void
     {
-        $slugs = [];
-
-        if (false === is_iterable($values)) {
-            $values = [$values];
-        }
-
-        if (is_array($values)) {
-            $values = new Collection($values);
-        }
-
-        if ($values instanceof Collection) {
-            if ($values->has('term_id')) {
-                $values = $values->pluck('term_id')->toArray();
-            } else {
-                $values = $values->toArray();
-            }
-        }
-
-        foreach ($values as $value) {
-            if (is_numeric($value)) {
-                $term = get_term((int) $value, $this->taxonomy);
-                if (false === is_wp_error($term)) {
-                    $slugs[] = $term->slug;
-                }
-            } else {
-                $value = (object) $value;
-                $slugs[] = $value->slug;
-            }
-        }
-
-        // remove non-existing terms
-        foreach ($slugs as $key => $slug) {
-            if (term_exists($slug, $this->taxonomy) === null) {
-                unset($slugs[$key]);
-            }
-        }
+        $slugs = Ids::getSlugs($values, $this->taxonomy);
 
         if (count($slugs)) { // Empty will reset terms
             wp_set_object_terms($this->instance->ID, $slugs, $this->taxonomy, true);
