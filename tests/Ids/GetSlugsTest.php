@@ -17,6 +17,16 @@ class GetSlugsTest extends \Tests\TestCase
         );
     }
 
+    public function test_single_term_id()
+    {
+        $term = factory(Taxonomies\Breeds::class)->create();
+
+        $this->assertEquals(
+            Ids::getSlugs((string) $term->term_id, Taxonomies\Breeds::TAXONOMY),
+            [$term->slug]
+        );
+    }
+
     public function test_collection_of_terms()
     {
         $terms = factory(Taxonomies\Breeds::class, 5)->create();

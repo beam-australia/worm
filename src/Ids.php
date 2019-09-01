@@ -52,6 +52,13 @@ class Ids
             return [$values->slug];
         }
 
+        if (is_numeric($values)) {
+            if (term_exists((int) $values, $taxonomy)) {
+                $term = get_term((int) $values, $taxonomy);
+                return [$term->slug];
+            }
+        }
+
         $slugs = [];
 
         if (is_iterable($values)) {
@@ -66,9 +73,8 @@ class Ids
 
             if (count($ids)) {
                 foreach ($ids as $id) {
-                    $id = (int) $id;
-                    if (term_exists($id, $taxonomy)) {
-                        $term = get_term($id, $taxonomy);
+                    if (term_exists((int) $id, $taxonomy)) {
+                        $term = get_term((int) $id, $taxonomy);
                         $slugs[] = $term->slug;
                     }
                 }
@@ -84,7 +90,7 @@ class Ids
      * @param mixed $values
      * @return int
      */
-    public static function getId($values):? int
+    public static function getId($values): ?int
     {
         if ($values instanceof Model) {
             return (int) $values->ID;
