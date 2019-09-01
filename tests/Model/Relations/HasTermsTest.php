@@ -101,6 +101,8 @@ class HasTermsTest extends \Tests\TestCase
 
         $this->assertFalse($slugs->contains('should-not-exist'));
 
+        $this->assertFalse($slugs->contains('fake-term'));
+
         $this->assertEquals($slugs->count(), 4);
     }
 }
