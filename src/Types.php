@@ -7,16 +7,16 @@ class Types
     /**
      * Casts bools to string values
      *
-     * @param [type] $value
+     * @param mixed $value
      * @return void
      */
     public static function booleanToString($value)
     {
-        if ($value === false) {
+        if ($value === false || $value === 0 || $value === '0') {
             return 'no';
         }
 
-        if ($value === true) {
+        if ($value === true || $value === 1 || $value === '1') {
             return 'yes';
         }
 
