@@ -27,6 +27,16 @@ class GetSlugsTest extends \Tests\TestCase
         );
     }
 
+    public function test_single_term_slug()
+    {
+        $term = factory(Taxonomies\Breeds::class)->create();
+
+        $this->assertEquals(
+            Ids::getSlugs($term->slug, Taxonomies\Breeds::TAXONOMY),
+            [$term->slug]
+        );
+    }
+
     public function test_collection_of_terms()
     {
         $terms = factory(Taxonomies\Breeds::class, 5)->create();
@@ -77,6 +87,40 @@ class GetSlugsTest extends \Tests\TestCase
 
         $ids = $terms
             ->pluck('term_id')
+            ->toArray();
+
+        $expected = $terms
+            ->pluck('slug')
+            ->toArray();
+
+        $this->assertEquals(
+            Ids::getSlugs($ids, Taxonomies\Breeds::TAXONOMY),
+            $expected
+        );
+    }
+
+    public function test_collection_of_slugs()
+    {
+        $terms = factory(Taxonomies\Breeds::class, 5)->create();
+
+        $ids = $terms->pluck('slug');
+
+        $expected = $terms
+            ->pluck('slug')
+            ->toArray();
+
+        $this->assertEquals(
+            Ids::getSlugs($ids, Taxonomies\Breeds::TAXONOMY),
+            $expected
+        );
+    }
+
+    public function test_array_of_slugs()
+    {
+        $terms = factory(Taxonomies\Breeds::class, 5)->create();
+
+        $ids = $terms
+            ->pluck('slug')
             ->toArray();
 
         $expected = $terms
