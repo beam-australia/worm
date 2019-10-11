@@ -59,24 +59,29 @@ class Ids
             }
         }
 
+        $values = is_iterable($values) ? $values : [$values];
+
         $slugs = [];
 
-        if (is_iterable($values)) {
+        $collection = new Collection($values);
 
-            $collection = new Collection($values);
+        if ($collection->has('term_id') || isset($collection->first()['term_id'])) {
+            $ids = $collection->pluck('term_id');
+        } else if (is_numeric($collection->first())) {
+            $ids = $collection->toArray();
+        } else {
+            $ids = $collection->map(function ($slug) use ($taxonomy) {
+                if ($term = get_term_by('slug', $slug, $taxonomy)) {
+                    return $term->term_id;
+                }
+            })->toArray();
+        }
 
-            if ($collection->has('term_id') || isset($collection->first()['term_id'])) {
-                $ids = $collection->pluck('term_id');
-            } else if (is_numeric($collection->first())) {
-                $ids = $collection->toArray();
-            }
-
-            if (count($ids)) {
-                foreach ($ids as $id) {
-                    if (term_exists((int) $id, $taxonomy)) {
-                        $term = get_term((int) $id, $taxonomy);
-                        $slugs[] = $term->slug;
-                    }
+        if (count($ids)) {
+            foreach ($ids as $id) {
+                if (term_exists((int) $id, $taxonomy)) {
+                    $term = get_term((int) $id, $taxonomy);
+                    $slugs[] = $term->slug;
                 }
             }
         }
