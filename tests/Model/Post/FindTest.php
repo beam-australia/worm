@@ -53,4 +53,21 @@ class FindTest extends \Tests\TestCase
 
         $this->assertEquals(Post::published()->count(), 3);
     }
+
+    public function test_it_can_find_draft_posts()
+    {
+        factory(Post::class, 3)->create([
+            'post_status' => PostStatus::DRAFT,
+        ]);
+
+        factory(Post::class, 3)->create([
+            'post_status' => PostStatus::PUBLISHED,
+        ]);
+
+        Post::draft()->each(function ($job) {
+            $this->assertEquals($job->post_status, PostStatus::DRAFT);
+        });
+
+        $this->assertEquals(Post::draft()->count(), 3);
+    }
 }

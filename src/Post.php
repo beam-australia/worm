@@ -109,4 +109,16 @@ class Post extends Model
             'post_status' => PostStatus::PUBLISHED,
         ], $args));
     }
+
+    /**
+     * Return draft posts
+     *
+     * @return Collection
+     */
+    public static function draft(array $args = []): Collection
+    {
+        return static::find(array_merge([
+            'post_status' => PostStatus::DRAFT,
+        ], $args));
+    }
 }
