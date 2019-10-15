@@ -76,6 +76,7 @@ class Post extends Model
         $args = array_merge([
             'post_type' => static::TYPE,
             'posts_per_page' => -1,
+            'numberposts' => -1,
             'post_status' => 'any',
         ], $args);
 
