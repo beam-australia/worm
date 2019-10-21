@@ -28,7 +28,6 @@
     },
     "require-dev": {
         "wp-phpunit/wp-phpunit": "^5.2",
-        "roots/wordpress": "^5.2",
         "phpunit/phpunit": "^7",
         "mockery/mockery": "^1.2"
     },
