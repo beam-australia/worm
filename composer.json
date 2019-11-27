@@ -21,10 +21,11 @@
         }
     ],
     "require": {
-        "tightenco/collect": "^5.8",
+        "fzaninotto/faker": "^1.8",
         "illuminate/support": "^5.8",
         "myclabs/php-enum": "^1.7",
-        "fzaninotto/faker": "^1.8"
+        "nesbot/carbon": "^2.27",
+        "tightenco/collect": "^5.8"
     },
     "require-dev": {
         "wp-phpunit/wp-phpunit": "^5.2",
