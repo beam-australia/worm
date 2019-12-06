@@ -2,6 +2,8 @@
 
 namespace Beam\Worm;
 
+use Carbon\Carbon;
+
 class Types
 {
     /**
@@ -48,7 +50,7 @@ class Types
             case 'integer':
                 return (int) $value;
             case 'date':
-                return Carbon::parse($value);
+                return $value ? Carbon::parse($value)->toIso8601String() : $value;
         }
     }
 }
