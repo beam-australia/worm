@@ -50,7 +50,7 @@ class Types
             case 'integer':
                 return (int) $value;
             case 'date':
-                return Carbon::parse($value)->toIso8601String();
+                return $value ? Carbon::parse($value)->toIso8601String() : $value;
         }
     }
 }
