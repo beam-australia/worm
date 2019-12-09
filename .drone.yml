@@ -2,6 +2,11 @@ kind: pipeline
 name: default
 steps:
 
+  - name: wait
+    image: alpine
+    commands:
+      - sleep 25
+
   - name: install
     image: beamaustralia/php:7.3.6
     commands:
