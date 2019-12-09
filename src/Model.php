@@ -306,7 +306,7 @@ class Model implements Arrayable
      *
      * @return array
      */
-    public function taxnomiesToArray(): array
+    public function taxonomiesToArray(): array
     {
         $data = [];
 
@@ -328,25 +328,25 @@ class Model implements Arrayable
     /**
      * Array of a model relation
      *
-     * @pram string $relationName
-     * @param int $depth
+     * @param bool $isChild
+     * @param string $relationName
      * @return array
      */
-    public function relationToArray(string $relationName, int $depth = 0): array
+    public function relationToArray(string $relationName, bool $isChild = false): array
     {
         $data = [];
 
         if ($relation = $this->getRelations()->get($relationName)) {
             if ($relation instanceof HasMany) {
                 if ($related = $relation->get($this)) {
-                    $data[$relationName] = $related->toArray($depth);
+                    $data[$relationName] = $related->toArray($isChild);
                 } else {
                     $data[$relationName] = [];
                 }
             }
             if ($relation instanceof HasOne) {
                 if ($related = $relation->get($this)) {
-                    $data[$relationName] = $related->toArray($depth);
+                    $data[$relationName] = $related->toArray($isChild);
                 }
             }
         }
@@ -357,16 +357,16 @@ class Model implements Arrayable
     /**
      * Array of model relations
      *
-     * @param int $depth
+     * @param bool $isChild
      * @return array
      */
-    public function relationsToArray(int $depth = 0): array
+    public function relationsToArray(bool $isChild = false): array
     {
         $data = [];
 
         if ($this->getRelations()->isNotEmpty()) {
-            foreach ($this->getRelations() as $key => $relation) {
-                $data = array_merge($data, $this->relationToArray($key, $depth));
+            foreach ($this->getRelations() as $relationName => $relation) {
+                $data = array_merge($data, $this->relationToArray($relationName, $isChild));
             }
         }
 
@@ -376,26 +376,19 @@ class Model implements Arrayable
     /**
      * Returns an arrayable representation of the object
      *
-     * @param int $depth of relations to retrieve
+     * @param bool $isChild
      * @return array
      */
-    public function toArray(int $depth = 0): array
+    public function toArray(bool $isChild = false): array
     {
-        $depth++;
-
         $instance = $this->load();
 
-        $data = $instance->attributesToArray();
+        $relations = $isChild === false ? $instance->relationsToArray(true) : [];
 
-        if ($depth < WORM_MODEL_DEPTH) {
-
-            // Taxonomies
-            $data = array_merge($data, $instance->taxnomiesToArray());
-
-            // Post Relations
-            $data = array_merge($data, $instance->relationsToArray($depth));
-        }
-
-        return $data;
+        return array_merge(
+            $instance->attributesToArray(),
+            $instance->taxonomiesToArray(),
+            $relations
+        );
     }
 }
