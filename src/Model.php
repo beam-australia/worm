@@ -272,6 +272,108 @@ class Model implements Arrayable
     }
 
     /**
+     * Array of model attributes
+     *
+     * @return array
+     */
+    public function attributesToArray(): array
+    {
+        $data = [
+            'ID' => $this->ID,
+        ];
+
+        foreach ($this->attributes as $key) {
+            if (isset($this->cast[$key])) {
+                if (is_array($this->$key)) {
+                    $values = [];
+                    foreach ($this->$key as $val) {
+                        $values[] = Types::cast($val, $this->cast[$key]);
+                    }
+                    $data[$key] = $values;
+                } else {
+                    $data[$key] = Types::cast($this->$key, $this->cast[$key]);
+                }
+            } else {
+                $data[$key] = $this->$key;
+            }
+        }
+
+        return $data;
+    }
+
+    /**
+     * Array of model taxonomies
+     *
+     * @return array
+     */
+    public function taxnomiesToArray(): array
+    {
+        $data = [];
+
+        if ($this->getTaxonomies()->isNotEmpty()) {
+            foreach ($this->getTaxonomies() as $taxonomy => $relation) {
+                if ($collection = $relation->get($this)) {
+                    if ($collection->isNotEmpty()) {
+                        $data[$taxonomy] = $collection->toArray();
+                    } else {
+                        $data[$taxonomy] = [];
+                    }
+                }
+            }
+        }
+
+        return $data;
+    }
+
+    /**
+     * Array of a model relation
+     *
+     * @pram string $relationName
+     * @param int $depth
+     * @return array
+     */
+    public function relationToArray(string $relationName, int $depth = 0): array
+    {
+        $data = [];
+
+        if ($relation = $this->getRelations()->get($relationName)) {
+            if ($relation instanceof HasMany) {
+                if ($related = $relation->get($this)) {
+                    $data[$relationName] = $related->toArray($depth);
+                } else {
+                    $data[$relationName] = [];
+                }
+            }
+            if ($relation instanceof HasOne) {
+                if ($related = $relation->get($this)) {
+                    $data[$relationName] = $related->toArray($depth);
+                }
+            }
+        }
+
+        return $data;
+    }
+
+    /**
+     * Array of model relations
+     *
+     * @param int $depth
+     * @return array
+     */
+    public function relationsToArray(int $depth = 0): array
+    {
+        $data = [];
+
+        if ($this->getRelations()->isNotEmpty()) {
+            foreach ($this->getRelations() as $key => $relation) {
+                $data = array_merge($data, $this->relationToArray($key, $depth));
+            }
+        }
+
+        return $data;
+    }
+
+    /**
      * Returns an arrayable representation of the object
      *
      * @param int $depth of relations to retrieve
@@ -283,59 +385,15 @@ class Model implements Arrayable
 
         $instance = $this->load();
 
-        $data = [
-            'ID' => $instance->ID,
-        ];
-
-        // Attributes
-        foreach ($instance->attributes as $key) {
-            if (isset($instance->cast[$key])) {
-                if (is_array($instance->$key)) {
-                    $values = [];
-                    foreach ($instance->$key as $val) {
-                        $values[] = Types::cast($val, $instance->cast[$key]);
-                    }
-                    $data[$key] = $values;
-                } else {
-                    $data[$key] = Types::cast($instance->$key, $instance->cast[$key]);
-                }
-            } else {
-                $data[$key] = $instance->$key;
-            }
-        }
+        $data = $instance->attributesToArray();
 
         if ($depth < WORM_MODEL_DEPTH) {
 
             // Taxonomies
-            if ($instance->getTaxonomies()->isNotEmpty()) {
-                foreach ($instance->getTaxonomies() as $taxonomy => $relation) {
-                    if ($collection = $relation->get($this)) {
-                        if ($collection->isNotEmpty()) {
-                            $data[$taxonomy] = $collection->toArray();
-                        } else {
-                            $data[$taxonomy] = [];
-                        }
-                    }
-                }
-            }
+            $data = array_merge($data, $instance->taxnomiesToArray());
 
             // Post Relations
-            if ($instance->getRelations()->isNotEmpty()) {
-                foreach ($instance->getRelations() as $key => $relation) {
-                    if ($relation instanceof HasMany) {
-                        if ($related = $relation->get($this)) {
-                            $data[$key] = $related->toArray($depth);
-                        } else {
-                            $data[$key] = [];
-                        }
-                    }
-                    if ($relation instanceof HasOne) {
-                        if ($related = $relation->get($this)) {
-                            $data[$key] = $related->toArray($depth);
-                        }
-                    }
-                }
-            }
+            $data = array_merge($data, $instance->relationsToArray($depth));
         }
 
         return $data;
