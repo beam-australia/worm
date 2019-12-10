@@ -55,8 +55,6 @@ class ToArrayTest extends \Tests\TestCase
 
         $this->assertSamePost($asArray['mother'], $mother);
 
-        $this->assertEquals($asArray['mother'], $mother->toArray());
-
         $this->assertEquals($asArray['mother_id'], (string) $mother->ID);
     }
 

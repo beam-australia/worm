@@ -339,14 +339,14 @@ class Model implements Arrayable
         if ($relation = $this->getRelations()->get($relationName)) {
             if ($relation instanceof HasMany) {
                 if ($related = $relation->get($this)) {
-                    $data[$relationName] = $related->toArray($isChild);
+                    $data = $related->toArray($isChild);
                 } else {
-                    $data[$relationName] = [];
+                    $data = [];
                 }
             }
             if ($relation instanceof HasOne) {
                 if ($related = $relation->get($this)) {
-                    $data[$relationName] = $related->toArray($isChild);
+                    $data = $related->toArray($isChild);
                 }
             }
         }
@@ -366,7 +366,7 @@ class Model implements Arrayable
 
         if ($this->getRelations()->isNotEmpty()) {
             foreach ($this->getRelations() as $relationName => $relation) {
-                $data = array_merge($data, $this->relationToArray($relationName, $isChild));
+                $data[$relationName] = $this->relationToArray($relationName, $isChild);
             }
         }
 
